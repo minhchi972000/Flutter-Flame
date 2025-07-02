@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flame_game/george/george_game.dart';
 import 'package:flutter_flame_game/src/my_game.dart';
 
 void main() {
@@ -23,6 +24,7 @@ class MyGameWidget extends StatefulWidget {
 
 class _MyGameWidgetState extends State<MyGameWidget> {
   final MyGame myGame = MyGame();
+  final GeorgeGame georgeGame = GeorgeGame();
 
   @override
   void reassemble() {
@@ -32,6 +34,6 @@ class _MyGameWidgetState extends State<MyGameWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: myGame);
+    return GameWidget(game: georgeGame);
   }
 }
