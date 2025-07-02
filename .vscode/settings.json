@@ -1,0 +1,8 @@
+{
+    "prettier.printWidth": 200,
+    "dart.lineLength": 80,
+    "editor.maxTokenizationLineLength": 23000,
+    "editor.minimap.maxColumn": 200,
+    "editor.wordWrapColumn": 120,
+    "files.autoSave": "onFocusChange"
+}
