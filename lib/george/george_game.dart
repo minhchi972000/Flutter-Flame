@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame/experimental.dart';
 
 class GeorgeGame extends FlameGame
     with HasKeyboardHandlerComponents, TapDetector {
@@ -16,14 +20,23 @@ class GeorgeGame extends FlameGame
   late SpriteAnimation idleAnimation;
 
   late SpriteAnimationComponent george;
+  late SpriteComponent background;
+  late final CameraComponent cameraComponent;
 
   // 0=idle, 1=down, 2=left, 3=up, 4=right
   int direction = 0;
   double animationSpeed = 0.1;
-  final double characterSize = 300;
+  final double characterSize = 100;
 
   @override
   FutureOr<void> onLoad() async {
+    final backgroundSprite = Sprite(await images.load("george/background.png"));
+    background =
+        SpriteComponent()
+          ..sprite = backgroundSprite
+          ..size = backgroundSprite.originalSize;
+    add(background);
+
     final spriteSheet = SpriteSheet(
       image: await images.load("george/george2.png"),
       srcSize: Vector2(48, 48),
@@ -62,6 +75,21 @@ class GeorgeGame extends FlameGame
           ..size = Vector2.all(characterSize);
     add(george);
 
+    // Create the world and add components
+    final world = World();
+    await add(world);
+    await world.add(background);
+    await world.add(george);
+
+    // Set up the camera
+    cameraComponent = CameraComponent(world: world);
+    cameraComponent.follow(george); // Make the camera follow george
+    cameraComponent.setBounds(
+      Rectangle.fromLTRB(0, 0, background.size.x, background.size.y),
+    ); // Set the bounds to the background size
+
+    await add(cameraComponent);
+
     return super.onLoad();
   }
 
@@ -80,11 +108,15 @@ class GeorgeGame extends FlameGame
         break;
       case 2:
         george.animation = leftAnimation;
-        george.x -= 1;
+        if (george.x > 0) {
+          george.x -= 1;
+        }
         break;
       case 3:
         george.animation = upAnimation;
-        george.y -= 1;
+        if (george.y > 0) {
+          george.y -= 1;
+        }
         break;
       case 4:
         george.animation = rightAnimation;
