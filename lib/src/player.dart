@@ -10,7 +10,7 @@ import 'package:flutter_flame_game/src/collisions/custom_hitbox.dart';
 import 'package:flutter_flame_game/src/my_game.dart';
 
 class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<MyGame>, KeyboardHandler {
+    with HasGameReference<MyGame>, KeyboardHandler {
   Player({super.position});
 
   late final Vector2 startingPosition;

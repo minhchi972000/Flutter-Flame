@@ -23,17 +23,35 @@ class MyGameWidget extends StatefulWidget {
 }
 
 class _MyGameWidgetState extends State<MyGameWidget> {
-  final MyGame myGame = MyGame();
-  final GeorgeGame georgeGame = GeorgeGame();
+  late Game _game;
+
+  int actionGame = 1;
+
+  void _actionGame() {
+    switch (actionGame) {
+      case 0:
+        _game = MyGame();
+
+      case 1:
+        _game = GeorgeGame();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _actionGame();
+  }
 
   @override
   void reassemble() {
     super.reassemble();
-    myGame.reload();
+    //MyGame().reLoad();
+    // _game.reLoad();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: georgeGame);
+    return GameWidget(game: _game);
   }
 }
