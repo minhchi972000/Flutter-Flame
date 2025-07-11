@@ -1,5 +1,5 @@
-import 'package:flutter_flame_game/src/collisions/collision_block.dart';
-import 'package:flutter_flame_game/src/player.dart';
+import 'package:flutter_flame_game/sample/src/collisions/collision_block.dart';
+import 'package:flutter_flame_game/sample/src/player.dart';
 
 bool checkCollision(Player player, CollisionBlock block) {
   final hitbox = player.hitbox;
@@ -13,9 +13,7 @@ bool checkCollision(Player player, CollisionBlock block) {
   final blockWidth = block.width;
   final blockHeight = block.height;
 
-  final result =
-      (playerY < blockY + blockHeight && playerY + playerHeight > blockY) &&
-      (playerX < blockX + blockWidth && playerX + playerWidth > blockX);
+  final result = (playerY < blockY + blockHeight && playerY + playerHeight > blockY) && (playerX < blockX + blockWidth && playerX + playerWidth > blockX);
 
   return result;
 }

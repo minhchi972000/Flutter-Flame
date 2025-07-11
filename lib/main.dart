@@ -1,16 +1,16 @@
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flame_game/george/george_game.dart';
-import 'package:flutter_flame_game/src/my_game.dart';
+import 'package:flutter_flame_game/adventure/adventure_game.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Flame.device.fullScreen();
+  // Flame.device.setLandscape();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Focus(
-        onKeyEvent: (node, event) => KeyEventResult.handled,
-        child: MyGameWidget(),
-      ),
+      home: Scaffold(body: Focus(onKeyEvent: (node, event) => KeyEventResult.handled, child: MyGameWidget())),
     ),
   );
 }
@@ -23,35 +23,23 @@ class MyGameWidget extends StatefulWidget {
 }
 
 class _MyGameWidgetState extends State<MyGameWidget> {
-  late Game _game;
-
-  int actionGame = 1;
-
-  void _actionGame() {
-    switch (actionGame) {
-      case 0:
-        _game = MyGame();
-
-      case 1:
-        _game = GeorgeGame();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _actionGame();
+    // _actionGame();
   }
 
   @override
   void reassemble() {
     super.reassemble();
-    //MyGame().reLoad();
-    // _game.reLoad();
+
+    // if (actionGame == 0) {
+    //   MyGame().reload();
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GameWidget(game: _game);
+    return GameWidget(game: AdventureGame());
   }
 }

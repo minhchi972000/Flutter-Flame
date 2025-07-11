@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flutter_flame_game/george/player_george.dart';
-import 'package:flutter_flame_game/src/my_game.dart';
+import 'package:flutter_flame_game/sample/src/my_game.dart';
 
 class LevelGeorge extends World with HasGameRef<MyGame> {
   final String levelName;

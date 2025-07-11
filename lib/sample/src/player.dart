@@ -4,13 +4,12 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/src/services/hardware_keyboard.dart';
 import 'package:flutter_flame_game/enum_state.dart';
-import 'package:flutter_flame_game/src/collisions/collision_block.dart';
-import 'package:flutter_flame_game/src/collisions/collision_utils.dart';
-import 'package:flutter_flame_game/src/collisions/custom_hitbox.dart';
-import 'package:flutter_flame_game/src/my_game.dart';
+import 'package:flutter_flame_game/sample/src/collisions/collision_block.dart';
+import 'package:flutter_flame_game/sample/src/collisions/collision_utils.dart';
+import 'package:flutter_flame_game/sample/src/collisions/custom_hitbox.dart';
+import 'package:flutter_flame_game/sample/src/my_game.dart';
 
-class Player extends SpriteAnimationGroupComponent
-    with HasGameReference<MyGame>, KeyboardHandler {
+class Player extends SpriteAnimationGroupComponent with HasGameReference<MyGame>, KeyboardHandler {
   Player({super.position});
 
   late final Vector2 startingPosition;
@@ -33,12 +32,7 @@ class Player extends SpriteAnimationGroupComponent
 
   WalkDirection lastWalkDirection = WalkDirection.down;
 
-  CustomHitbox hitbox = const CustomHitbox(
-    offsetX: 18,
-    offsetY: 28,
-    width: 12,
-    height: 4,
-  );
+  CustomHitbox hitbox = const CustomHitbox(offsetX: 18, offsetY: 28, width: 12, height: 4);
 
   List<CollisionBlock> collisionBlocks = [];
 
@@ -49,12 +43,7 @@ class Player extends SpriteAnimationGroupComponent
 
     _loadAllAnimations();
 
-    add(
-      RectangleHitbox(
-        position: Vector2(hitbox.offsetX, hitbox.offsetY),
-        size: Vector2(hitbox.width, hitbox.height),
-      ),
-    );
+    add(RectangleHitbox(position: Vector2(hitbox.offsetX, hitbox.offsetY), size: Vector2(hitbox.width, hitbox.height)));
 
     return super.onLoad();
   }
@@ -145,20 +134,12 @@ class Player extends SpriteAnimationGroupComponent
     horizontalMovement = 0;
     verticalMovement = 0;
 
-    final isLeftKeyPressed =
-        keysPressed.contains(LogicalKeyboardKey.keyA) ||
-        keysPressed.contains(LogicalKeyboardKey.arrowLeft);
-    final isRightKeyPressed =
-        keysPressed.contains(LogicalKeyboardKey.keyD) ||
-        keysPressed.contains(LogicalKeyboardKey.arrowRight);
+    final isLeftKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyA) || keysPressed.contains(LogicalKeyboardKey.arrowLeft);
+    final isRightKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyD) || keysPressed.contains(LogicalKeyboardKey.arrowRight);
 
     if (!isLeftKeyPressed && !isRightKeyPressed) {
-      final isUpKeyPressed =
-          keysPressed.contains(LogicalKeyboardKey.keyW) ||
-          keysPressed.contains(LogicalKeyboardKey.arrowUp);
-      final isDownKeyPressed =
-          keysPressed.contains(LogicalKeyboardKey.keyS) ||
-          keysPressed.contains(LogicalKeyboardKey.arrowDown);
+      final isUpKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyW) || keysPressed.contains(LogicalKeyboardKey.arrowUp);
+      final isDownKeyPressed = keysPressed.contains(LogicalKeyboardKey.keyS) || keysPressed.contains(LogicalKeyboardKey.arrowDown);
 
       verticalMovement += isUpKeyPressed ? -1 : 0;
       verticalMovement += isDownKeyPressed ? 1 : 0;
@@ -211,11 +192,7 @@ class Player extends SpriteAnimationGroupComponent
   SpriteAnimation _spriteAnimation(PlayerState state) {
     return SpriteAnimation.fromFrameData(
       game.images.fromCache("characters/${state.assetName}.png"),
-      SpriteAnimationData.sequenced(
-        amount: state.frameCount,
-        stepTime: 0.1,
-        textureSize: Vector2.all(48),
-      ),
+      SpriteAnimationData.sequenced(amount: state.frameCount, stepTime: 0.1, textureSize: Vector2.all(48)),
     );
   }
 }

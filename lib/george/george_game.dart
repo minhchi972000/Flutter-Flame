@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
-import 'package:flame/experimental.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:flame_tiled/flame_tiled.dart';
 
-class GeorgeGame extends FlameGame
-    with HasKeyboardHandlerComponents, TapDetector {
+class GeorgeGame extends FlameGame with HasKeyboardHandlerComponents, TapDetector, HasCollisionDetection {
   GeorgeGame();
 
   late SpriteAnimation downAnimation;
@@ -19,57 +19,55 @@ class GeorgeGame extends FlameGame
   late SpriteAnimation rightAnimation;
   late SpriteAnimation idleAnimation;
 
-  late SpriteAnimationComponent george;
-  late SpriteComponent background;
+  late GeorgeComponent george;
+  // late SpriteComponent background;
+  late double mapWidth;
+  late double mapHeight;
   late final CameraComponent cameraComponent;
 
   // 0=idle, 1=down, 2=left, 3=up, 4=right
   int direction = 0;
   double animationSpeed = 0.1;
   final double characterSize = 100;
+  final double characterSpeed = 80;
+
+  Future<void> startBgmMusic() async {
+    await FlameAudio.bgm.initialize();
+    await FlameAudio.bgm.play('music.mp3');
+  }
+
+  String soundStrackName() {
+    return FlameAudio.bgm.audioPlayer.source.toString();
+  }
 
   @override
   FutureOr<void> onLoad() async {
-    final backgroundSprite = Sprite(await images.load("george/background.png"));
-    background =
-        SpriteComponent()
-          ..sprite = backgroundSprite
-          ..size = backgroundSprite.originalSize;
-    add(background);
+    final homeMap = await TiledComponent.load('george/map.tmx', Vector2.all(16));
 
-    final spriteSheet = SpriteSheet(
-      image: await images.load("george/george2.png"),
-      srcSize: Vector2(48, 48),
-    );
+    // add(homeMap);
 
-    downAnimation = spriteSheet.createAnimation(
-      row: 0,
-      stepTime: animationSpeed,
-      to: 4,
-    );
-    upAnimation = spriteSheet.createAnimation(
-      row: 1,
-      stepTime: animationSpeed,
-      to: 4,
-    );
-    leftAnimation = spriteSheet.createAnimation(
-      row: 2,
-      stepTime: animationSpeed,
-      to: 4,
-    );
-    rightAnimation = spriteSheet.createAnimation(
-      row: 3,
-      stepTime: animationSpeed,
-      to: 4,
-    );
-    idleAnimation = spriteSheet.createAnimation(
-      row: 0,
-      stepTime: animationSpeed,
-      to: 1,
-    );
+    mapWidth = homeMap.tileMap.map.width * 16;
+    mapHeight = homeMap.tileMap.map.height * 16;
+
+    // final backgroundSprite = Sprite(await images.load("george/background.png"));
+    // background =
+    //     SpriteComponent()
+    //       ..sprite = backgroundSprite
+    //       ..size = backgroundSprite.originalSize;
+    // add(background);
+    startBgmMusic();
+    overlays.add('ButtonController');
+
+    final spriteSheet = SpriteSheet(image: await images.load("george/george2.png"), srcSize: Vector2(48, 48));
+
+    downAnimation = spriteSheet.createAnimation(row: 0, stepTime: animationSpeed, to: 4);
+    upAnimation = spriteSheet.createAnimation(row: 1, stepTime: animationSpeed, to: 4);
+    leftAnimation = spriteSheet.createAnimation(row: 2, stepTime: animationSpeed, to: 4);
+    rightAnimation = spriteSheet.createAnimation(row: 3, stepTime: animationSpeed, to: 4);
+    idleAnimation = spriteSheet.createAnimation(row: 0, stepTime: animationSpeed, to: 1);
 
     george =
-        SpriteAnimationComponent()
+        GeorgeComponent()
           ..animation = idleAnimation
           ..position = Vector2(100, 200)
           ..size = Vector2.all(characterSize);
@@ -78,19 +76,26 @@ class GeorgeGame extends FlameGame
     // Create the world and add components
     final world = World();
     await add(world);
-    await world.add(background);
+    // await world.add(background);
     await world.add(george);
 
     // Set up the camera
     cameraComponent = CameraComponent(world: world);
     cameraComponent.follow(george); // Make the camera follow george
-    cameraComponent.setBounds(
-      Rectangle.fromLTRB(0, 0, background.size.x, background.size.y),
-    ); // Set the bounds to the background size
+    cameraComponent.setBounds(Rectangle.fromLTRB(0, 0, mapWidth, mapHeight)); // Set the bounds to the background size
 
     await add(cameraComponent);
 
     return super.onLoad();
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    // canvas.drawRect(
+    //   Rectangle(0, 0, 100, 100),
+    //   Paint()..color = Color.fromARGB(255, 255, 0, 0),
+    // );
   }
 
   @override
@@ -104,23 +109,27 @@ class GeorgeGame extends FlameGame
         break;
       case 1:
         george.animation = downAnimation;
-        george.y += 1;
+        if (george.y < mapHeight - george.height) {
+          george.y += characterSpeed * dt;
+        }
         break;
       case 2:
         george.animation = leftAnimation;
         if (george.x > 0) {
-          george.x -= 1;
+          george.x -= characterSpeed * dt;
         }
         break;
       case 3:
         george.animation = upAnimation;
         if (george.y > 0) {
-          george.y -= 1;
+          george.y -= characterSpeed * dt;
         }
         break;
       case 4:
         george.animation = rightAnimation;
-        george.x += 1;
+        if (george.x < mapWidth - george.width) {
+          george.x += characterSpeed * dt;
+        }
         break;
     }
   }
@@ -137,5 +146,46 @@ class GeorgeGame extends FlameGame
   void reload() {
     removeAll(children);
     onLoad();
+  }
+}
+
+class FriendComponent extends PositionComponent with CollisionCallbacks {
+  FriendComponent({super.position, super.size}) {
+    // Add a rectangular hitbox
+    add(RectangleHitbox());
+  }
+
+  @override
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+    // Handle collision start (e.g., when collision begins)
+    print('Collision started with $other');
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+    // Handle collision end (e.g., when collision stops)
+    print('Collision ended with $other');
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    // Handle ongoing collision (called every frame during collision)
+    print('Colliding with $other at $intersectionPoints');
+  }
+}
+
+// Example of another collidable component
+class GeorgeComponent extends SpriteAnimationComponent with CollisionCallbacks {
+  GeorgeComponent({super.position, super.size}) {
+    add(RectangleHitbox());
+  }
+
+  @override
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+    print('OtherComponent collided with $other');
   }
 }

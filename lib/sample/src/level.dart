@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:flutter_flame_game/src/collisions/collision_block.dart';
-import 'package:flutter_flame_game/src/my_game.dart';
-import 'package:flutter_flame_game/src/player.dart';
+import 'package:flutter_flame_game/sample/src/collisions/collision_block.dart';
+import 'package:flutter_flame_game/sample/src/my_game.dart';
+import 'package:flutter_flame_game/sample/src/player.dart';
 
 class Level extends World with HasGameRef<MyGame> {
   final String levelName;
@@ -46,10 +46,7 @@ class Level extends World with HasGameRef<MyGame> {
     final collisionLayer = map.tileMap.getLayer<ObjectGroup>("Colliders");
     if (collisionLayer != null) {
       for (final collider in collisionLayer.objects) {
-        final block = CollisionBlock(
-          position: Vector2(collider.x, collider.y),
-          size: Vector2(collider.width, collider.height),
-        );
+        final block = CollisionBlock(position: Vector2(collider.x, collider.y), size: Vector2(collider.width, collider.height));
         collisionBlocks.add(block);
         add(block);
       }

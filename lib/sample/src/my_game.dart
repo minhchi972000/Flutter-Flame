@@ -4,8 +4,8 @@ import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flutter_flame_game/src/level.dart';
-import 'package:flutter_flame_game/src/player.dart';
+import 'package:flutter_flame_game/sample/src/level.dart';
+import 'package:flutter_flame_game/sample/src/player.dart';
 
 class MyGame extends FlameGame with HasKeyboardHandlerComponents {
   MyGame();
@@ -36,10 +36,7 @@ class MyGame extends FlameGame with HasKeyboardHandlerComponents {
     final windowWidth = size.x;
     final windowHeight = size.y;
 
-    cam = CameraComponent(
-      world: level,
-      viewport: FixedSizeViewport(windowWidth, windowHeight),
-    );
+    cam = CameraComponent(world: level, viewport: FixedSizeViewport(windowWidth, windowHeight));
 
     cam.viewfinder.anchor = Anchor.center;
     cam.viewfinder.zoom = 2.0;

@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/src/services/hardware_keyboard.dart';
+import 'package:flutter_flame_game/adventure/adventure_game.dart';
 import 'package:flutter_flame_game/enum_state.dart';
 import 'package:flutter_flame_game/sample/src/collisions/collision_block.dart';
 import 'package:flutter_flame_game/sample/src/collisions/custom_hitbox.dart';
-import 'package:flutter_flame_game/sample/src/my_game.dart';
 
-class PlayerGeorge extends SpriteAnimationGroupComponent with HasGameRef<MyGame>, KeyboardHandler {
-  PlayerGeorge({super.position});
+class PlayerAdventure extends SpriteAnimationGroupComponent with HasGameReference<AdventureGame>, KeyboardHandler {
+  PlayerAdventure({super.position});
 
   late final Vector2 startingPosition;
 
@@ -51,8 +51,6 @@ class PlayerGeorge extends SpriteAnimationGroupComponent with HasGameRef<MyGame>
   void update(double dt) {
     _updatePlayerState();
     _updatePlayerPosition(dt);
-    _checkHorizontalCollisions();
-    _checkVerticalCollisions();
 
     super.update(dt);
   }
@@ -90,14 +88,6 @@ class PlayerGeorge extends SpriteAnimationGroupComponent with HasGameRef<MyGame>
 
     velocity.y = verticalMovement * moveSpeed;
     position.y += velocity.y * dt;
-  }
-
-  void _checkHorizontalCollisions() {
-    for (final block in collisionBlocks) {}
-  }
-
-  void _checkVerticalCollisions() {
-    for (final block in collisionBlocks) {}
   }
 
   @override

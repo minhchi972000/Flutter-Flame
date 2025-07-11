@@ -1,0 +1,54 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "C:/Users/Minh Chi/Documents/GitHub/Flutter-Flame/assets/tiles/level1.tmx": {
+            "scale": 2.2305208333333333,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 239.8542941203942,
+                "y": 159.82814178302903
+            }
+        },
+        "C:/Users/Minh Chi/Documents/GitHub/Flutter-Flame/assets/tiles/level1.tmx#Grass": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Minh Chi/Documents/GitHub/Flutter-Flame/assets/tiles/level1.tmx#Hills": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Minh Chi/Documents/GitHub/Flutter-Flame/assets/tiles/level1.tmx#Water": {
+            "scaleInDock": 1
+        },
+        "level_1.tmx": {
+            "scale": 2.2305208333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 239.8542941203942,
+                "y": 159.82814178302903
+            }
+        },
+        "level_1.tmx#adventure11": {
+            "scaleInDock": 1
+        }
+    },
+    "last.imagePath": "C:/Users/Minh Chi/Documents/GitHub/Flutter-Flame/assets/images/adventure",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+    ],
+    "project": "map.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
